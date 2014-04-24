@@ -2,21 +2,20 @@ $(function(){
 
 	$('.submit').click(function(){
 
-		var action 	= $('input[name="action"]').val(),
-			start 	= $('input[name="start-date"]').val(),
+		var start 	= $('input[name="start-date"]').val(),
 			sTime	= $('input[name="start-time"]').val(),
 			end		= $('input[name="end-date"]').val(),
 			eTime	= $('input[name="end-time"]').val(),
 			notes	= $('textarea[name="notes"]').val(),
-			biid	= $('input[name="behaviour_instance_id"]').val(),
+			// biid	= $('input[name="behaviour_instance_id"]').val(),
 			outcome = $('#form form').serialize(),
-			data 	= { plan_id: plan_id, biid: biid, start: start +' '+sTime, end: end +' '+eTime, outcome: outcome, notes: notes };
+			data 	= { plan_id: plan_id, start: start +' '+sTime, end: end +' '+eTime, outcome: outcome, notes: notes };
 
 			if( validate() > 0){
 				alert(1);
 			} else {
 				$.ajax({
-					url: global_url + 'ajax/'+action,
+					url: global_url + 'ajax/save_data',
 					type: 'POST',
 					data: data,
 					dataType: 'json',

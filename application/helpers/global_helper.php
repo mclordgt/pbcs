@@ -1,5 +1,17 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+if ( ! function_exists('js_array')){
+
+	function js_array( $array ){
+
+		$return = [ $array['min'], $array['avg'], $array['max'] ];
+
+		return json_encode( $return );
+
+	}
+
+}
+
 if ( ! function_exists('behaviour_parser')){
 
 	function behaviour_parser(){

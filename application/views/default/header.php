@@ -46,8 +46,12 @@
 		</div><!-- #client_info -->
 		<!-- Nav tabs -->
 		<ul class="nav nav-tabs" id="myTab">
-			<li class="active"><a href="#weekly" data-toggle="tab">Weekly</a></li>
-			<li><a href="#monthly" data-toggle="tab">Monthly</a></li>
+			<?php $pmCount = 0; ?>
+			<?php foreach($planMeasures as $planMeasure): ?>
+			<li<?php echo ($pmCount == 0 ? ' class="active"' : ''); ?>><a href="#<?php echo str_replace(' ', '-', strtolower($planMeasure->measure_description) ); ?>" data-toggle="tab"><?php echo ucwords($planMeasure->measure_description); ?></a></li>
+			<?php $pmCount++; ?>
+			<?php endforeach; ?>
+			<!-- <li><a href="#monthly" data-toggle="tab">Monthly</a></li> -->
 		</ul>
 		<?php elseif( $this->session->userdata('client_id') && $this->uri->segment(1) != 'presentation'): ?>
 		<ul class="overflow clear">

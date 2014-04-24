@@ -5,6 +5,8 @@ class Presentation extends CI_Controller {
 	public $client_id;
 	public $plan_id;
 
+	private $planMeasure;
+
 	public function __construct() {
 		
 		parent::__construct();
@@ -20,8 +22,6 @@ class Presentation extends CI_Controller {
 		$this->data['headerData']['scripts'][] 	= 'plugins/jquery-ui/js/jquery-ui-1.10.4.custom.min.js';
 		$this->data['headerData']['scripts'][] 	= 'js/presentation/ajax.js';
 		$this->data['headerData']['scripts'][]	= 'plugins/jqplot/jquery.jqplot.min.js';
-		// $this->data['headerData']['scripts'][] 	= 'js/init.js';
-		// $this->data['headerData']['scripts'][] 	= 'js/common.js';
 
 		$this->data['headerData']['headerTitle']= 'Presentation';
 		$this->data['headerData']['templateID']	= 'presentation';
@@ -38,22 +38,30 @@ class Presentation extends CI_Controller {
 		$this->data['footerData']['scripts'][] 	= 'js/presentation/presentation.js';
 
 		$this->client_id = $this->uri->segment(3);
+		$this->plan_id = $this->uri->segment(4);
 		
-		$models = array( 'm_clients','m_plans', 'm_common' );
+		$models = array( 'm_clients','m_plans', 'm_common', 'm_presentation' );
 		$this->load->model( $models );
 
 		$this->global_library->unset_items();
 
 		$this->session->set_userdata( $this->m_clients->getClient( $this->client_id ) );
-
 	}
 	
 	public function client()
 	{
 		$this->global_library->unset_items();
 		$this->data['headerData']['pageTitle'] = 'PBCS - Presentation';
+		$this->data['headerData']['planMeasures'] = $this->m_presentation->getPlanMeasures( $this->plan_id );
 
-		$this->data['pageData']['plan'] = $this->m_plans->getPlan( $this->plan_id );
+		$this->data['pageData']['planMeasures'] = $this->m_presentation->getPlanMeasures( $this->plan_id );
+
+		foreach( $this->data['pageData']['planMeasures'] as $measure ){
+			$measures[] = $this->m_presentation->getMinAvgMax( $this->client_id, $measure->measure_id );	
+		}
+
+		$this->data['pageData']['measures'] = $measures;
+
 		$this->data['pageView'] = 'presentation';
 
 		$this->load->view('master', $this->data);
