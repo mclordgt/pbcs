@@ -22,23 +22,24 @@ class Presentation extends CI_Controller {
 		$this->data['headerData']['scripts'][] 	= 'plugins/jquery-ui/js/jquery-ui-1.10.4.custom.min.js';
 		$this->data['headerData']['scripts'][] 	= 'js/presentation/ajax.js';
 		$this->data['headerData']['scripts'][]	= 'plugins/jqplot/jquery.jqplot.min.js';
+		$this->data['headerData']['scripts'][]	= 'js/bootstrap.min.js';
 
 		$this->data['headerData']['headerTitle']= 'Presentation';
 		$this->data['headerData']['templateID']	= 'presentation';
 		$this->data['headerData']['templateCl']	= '';
 
 		// Footer Common 
-		$this->data['footerData']['scripts'][]	= 'js/bootstrap.min.js';
-		
 		$this->data['footerData']['scripts'][]	= 'plugins/jqplot/syntaxhighlighter/scripts/shCore.min.js';
 		$this->data['footerData']['scripts'][]	= 'plugins/jqplot/syntaxhighlighter/scripts/shBrushJScript.min.js';
 		$this->data['footerData']['scripts'][]	= 'plugins/jqplot/syntaxhighlighter/scripts/shBrushXml.min.js';
 		$this->data['footerData']['scripts'][]	= 'plugins/jqplot/plugins/jqplot.canvasTextRenderer.min.js';
 		$this->data['footerData']['scripts'][]	= 'plugins/jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js';
+		$this->data['footerData']['scripts'][]	= 'plugins/jqplot/plugins/jqplot.dateAxisRenderer.min.js';
 		$this->data['footerData']['scripts'][] 	= 'js/presentation/presentation.js';
 
 		$this->client_id = $this->uri->segment(3);
 		$this->plan_id = $this->uri->segment(4);
+		$this->interval = $this->uri->segment(5);
 		
 		$models = array( 'm_clients','m_plans', 'm_common', 'm_presentation' );
 		$this->load->model( $models );
@@ -57,7 +58,7 @@ class Presentation extends CI_Controller {
 		$this->data['pageData']['planMeasures'] = $this->m_presentation->getPlanMeasures( $this->plan_id );
 
 		foreach( $this->data['pageData']['planMeasures'] as $measure ){
-			$measures[] = $this->m_presentation->getMinAvgMax( $this->client_id, $measure->measure_id );	
+			$measures[] = $this->m_presentation->getMinAvgMax( $this->client_id, $measure->measure_id, $this->interval );	
 		}
 
 		$this->data['pageData']['measures'] = $measures;

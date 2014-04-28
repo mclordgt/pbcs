@@ -11,6 +11,26 @@ class Ajax extends CI_Controller {
 		$this->load->model( 'm_common' );
 	}	
 
+	public function graphValues(){
+
+		extract($_POST);
+
+		$this->load->model( 'm_presentation' );
+		$measures = array();
+
+		$planMeasures = $this->m_presentation->getPlanMeasures( $plan_id );
+
+		foreach( $planMeasures as $measure ){
+			$measures[] = $this->m_presentation->getMinAvgMax( $client_id, $measure->measure_id, $interval );	
+		}
+		foreach( $measures as $k ){
+			$item = key($k);
+			$plot[$item] = array( $k[$item]['min'], $k[$item]['avg'], $k[$item]['max'] );
+		}
+
+		echo json_encode($plot);
+	}
+
 	public function validateEmail(){
 
 		extract($_POST);

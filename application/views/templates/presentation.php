@@ -1,48 +1,43 @@
 <section id="container" class="paddingNone">
-
 	<!-- Tab panes -->
 	<div class="tab-content">
+
+		<div class="interval">
+			<label>Graph Interval</label>
+			<ul class="btn-group">
+				<li><a class="btn btn-primary<?php echo ($this->uri->segment(5)=='week' ? ' active' : ''); ?>" href="<?php echo site_url('presentation/client').'/'.$this->uri->segment(3).'/'.$this->uri->segment(4); ?>/week">Week</a></li>
+				<li><a class="btn btn-primary<?php echo ($this->uri->segment(5)=='month' ? ' active' : ''); ?>" href="<?php echo site_url('presentation/client').'/'.$this->uri->segment(3).'/'.$this->uri->segment(4); ?>/month">Month</a></li>
+			</ul>
+		</div>
+
 		<?php $pmCount = 0; ?>
 		<?php foreach( $planMeasures as $planMeasure ): ?>
 		<div class="tab-pane<?php echo ($pmCount==0 ? ' active': ''); ?>" id="<?php echo str_replace(' ', '-', strtolower($planMeasure->measure_description) ); ?>">
-			<h4><?php echo ucwords( $planMeasure->measure_description ); ?> Measure of Value</h4>
 
 			<div class="chart-parent">
-				<div id="chart<?php echo $pmCount+1; ?>" style="height:300px;"></div>
+
+				<div id="chart-<?php echo str_replace(' ', '_', strtolower($planMeasure->measure_description) ); ?>" style="height:300px; clear: both;"></div>
+
 			</div>
 			
 		</div>
 		<?php $pmCount++; ?>
 		<?php endforeach; ?>
+
 	</div>
 
+</section><!-- /#container -->
+
 	<script type="text/javascript">
+		plot = new Object();
+		interval = '<?php echo $this->uri->segment(5); ?>';
 
-		var plot = new Object();
+		$(document).ready(function(){
+			<?php foreach( $measures as $measure ): ?>
+				<?php $item = key($measure); ?>
 
-		<?php $iCount = 1; ?>
-		<?php foreach( $measures as $measure ): ?>
-			<?php $item = key($measure); ?>
-
-			plot.plot<?php echo $iCount; ?> = $.jqplot ('chart<?php echo $iCount; ?>', <?php echo js_array( $measure[ $item ] ); ?>,{
-				title: { text: 'MEASURE VALUE', textColor: '#fff', fontFamily: 'Gotham Light' },
-				axesDefaults: { 
-					labelRenderer: $.jqplot.CanvasAxisLabelRenderer, labelOptions: { textColor: '#fff' },
-					tickRenderer: $.jqplot.CanvasAxisTickRenderer, tickOptions: { textColor: '#fff' }
-				},
-				axes: {
-					xaxis: { label: 'Weeks', textColor: '#fff' }, 
-					yaxis: { label: 'Value', textColor: '#fff' }
-				},
-				legend: { show: true, location: 'nw' },
-				series: [{ label: 'Maximum' }, { label: 'Average' }, { label: 'Minimum' }]
-			});
-
-			<?php $iCount++; ?>
-		<?php endforeach; ?>
-
-		var details = <?php echo $iCount-1; ?>
+				plot.<?php echo $item; ?> = <?php echo js_array( $measure[ $item ]); ?>
+			<?php endforeach; ?>
+		});
 		
 	</script>
-
-</section><!-- /#container -->

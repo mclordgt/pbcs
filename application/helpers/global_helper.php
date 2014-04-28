@@ -4,7 +4,9 @@ if ( ! function_exists('js_array')){
 
 	function js_array( $array ){
 
-		$return = [ $array['min'], $array['avg'], $array['max'] ];
+		$return = [ $array['max'], $array['avg'], $array['min'] ];
+
+		// $return = [ $array['max'] ];
 
 		return json_encode( $return );
 
